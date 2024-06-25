@@ -1,0 +1,1 @@
+#Imel sem težave z SSH ključem, tako da preverjam če deluje
