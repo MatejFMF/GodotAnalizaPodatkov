@@ -1,3 +1,5 @@
 *.html
+!godot.html
 test.py
 __pycache__
+*.csv
