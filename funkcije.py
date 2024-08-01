@@ -27,7 +27,7 @@ class Igra:
         pass
 
     def __str__(self) -> str:
-        return str((self.ime, "id: " + self.id))
+        return str((self.ime, "id: " + self.id, self.release_date))
 
 
 def get_game_info(html):
@@ -41,8 +41,18 @@ def get_game_info(html):
     nova_igra.id = re.search(id_link_vzorec, html).group(2)
     description_vzorec = r'"og:description" content="(.*)">'
     nova_igra.description = re.search(description_vzorec, html).group(1)
-    developer_vzorec = r'<div class="summary column" id="developers_list">\s*<a href="https://store.steampowered.com/curator/.*">(.*)</a>'
+    developer_vzorec = r'<div class="summary column" id="developers_list">\n?\s*<a href="https://store.steampowered.com/.*">(.*)</a>'
     nova_igra.developer = re.search(developer_vzorec, html).group(1)
-    publisher_vzorec = r'<div class="subtitle column">Publisher:</div>\s*<div class="summary column">\s*<a href="https://store.steampowered.com/curator/.*">(.*)</a>'
+    publisher_vzorec = r'<div class="subtitle column">Publisher:</div>\n?\s*<div class="summary column">\n?\s*<a href="https://store.steampowered.com/.*">(.*)</a>'
     nova_igra.publisher = re.search(publisher_vzorec, html).group(1)
+    release_date_vzorec = r"<b>Release Date:</b> (.*)<br>"
+    nova_igra.release_date = re.search(release_date_vzorec, html).group(1)
+    recent_reviews_vzorec = r'<div class="subtitle column">Recent Reviews:</div>\n?\s*<div class="summary column">\n?\s*<span class=".*">(.*)</span>\n?\s*<span class="responsive_hidden">\n?\s*\((.+)\)\n?\s*</span>\n\s*<span class="nonresponsive_hidden responsive_reviewdesc">\n\s*.*(\d+%)'
+    nova_igra.recent_reviews = re.search(recent_reviews_vzorec, html).group(1, 2, 3)
+    all_reviews_vzorec = r'<div class="subtitle column all">All Reviews:</div>\n?\s*<div class="summary column">\n?\s*<span class=.*>(.*)</span>\n?\s*<span class="responsive_hidden">\n?\s*\((.*)\)\n?\s*</span>\n?\s*<span class="nonresponsive_hidden responsive_reviewdesc">\n?\s*- (\d+%)'
+    nova_igra.all_reviews = re.search(all_reviews_vzorec, html).group(1, 2, 3)
+    genre_vzorec = r'<a href="https://store.steampowered.com/genre/.*?">(.*?)</a>'
+    nova_igra.genre = tuple(x for x in re.findall(genre_vzorec, html))
+    achievements_vzorec = r'<div class="responsive_banner_link_title responsive_chevron_right">View Steam Achievements <span class="responsive_banner_link_total">\((\d*)\)</span></div>'
+    nova_igra.achievements = re.search(achievements_vzorec, html).group(1)
     return nova_igra
