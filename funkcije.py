@@ -100,4 +100,4 @@ def id_to_link(id):
 
 
 def game_info_to_string(igra: Igra):
-    return f"{igra.id};{igra.ime};{igra.link};{igra.cena};{igra.discount};{igra.release_date};{igra.developer};{igra.publisher};{igra.all_reviews};{igra.genre};{igra.achievements};{igra.description};"
+    return f"{igra.id};{igra.ime};{igra.link};{igra.cena};{igra.discount};{igra.release_date};{igra.developer};{igra.publisher};{igra.all_reviews};{igra.genre};{igra.achievements};{igra.description}"
