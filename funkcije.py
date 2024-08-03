@@ -1,5 +1,3 @@
-import csv
-import os
 import requests
 import re
 
@@ -8,9 +6,9 @@ def download_url_to_string(url):
     return requests.get(url).text
 
 
-def findall_godot_games(html):
+def findall_godot_games_ids(html):
     vzorec = r'<a target="_blank" class="b" href="/app/(\d*)/">(.*)</a>'
-    return ((x.group(1), x.group(2)) for x in re.finditer(vzorec, html))
+    return tuple(x.group(1) for x in re.finditer(vzorec, html))
 
 
 def naredi_godot_csv(datoteka, prva_vrstica, seznam):
@@ -29,23 +27,30 @@ class Igra:
         return f"Id: {self.id}, {self.ime}"
 
 
+def remove_semicolon(niz):
+    niz = niz.replace("amp;", "")
+    niz = niz.replace("&quot;", '"')
+    niz = niz.replace(";", ":,")
+    return niz
+
+
 def find_information(vzorec, html, group_number, not_found_message="None"):
     try:
-        return re.search(vzorec, html).group(group_number)
+        return remove_semicolon(re.search(vzorec, html).group(group_number))
     except:
         return not_found_message
 
 
 def find_multiple_information(vzorec, html, group_numbers, not_found_message="None"):
     try:
-        return re.search(vzorec, html).group(*group_numbers)
+        return remove_semicolon(str(re.search(vzorec, html).group(*group_numbers)))
     except:
         return not_found_message
 
 
 def find_all_information(vzorec, html, not_found_message="None"):
     try:
-        return str(tuple(x for x in re.findall(vzorec, html)))
+        return remove_semicolon(str(tuple(x for x in re.findall(vzorec, html))))
     except:
         return not_found_message
 
@@ -60,7 +65,7 @@ publisher_vzorec = r'<div class="subtitle column">Publisher:</div>\n?\s*<div cla
 release_date_vzorec = r"<b>Release Date:</b> (.*)<br>"
 all_reviews_vzorec = r'<div class="subtitle column all">All Reviews:</div>\n?\s*<div class="summary column">\n?\s*<span class=.*>(.*)</span>\n?\s*<span class="responsive_hidden">\n?\s*\((.*)\)\n?\s*</span>\n?\s*<span class="nonresponsive_hidden responsive_reviewdesc">\n?\s*- (\d+%)'
 recent_reviews_vzorec = r'<div class="subtitle column">Recent Reviews:</div>\n?\s*<div class="summary column">\n?\s*<span class=.*>(.*)</span>\n?\s*<span class="responsive_hidden">\n?\s*\((.+)\)\n?\s*</span>\n?\s*<span class="nonresponsive_hidden responsive_reviewdesc">\n\s*- (\d+%)'
-genre_vzorec = r'<a href="https://store.steampowered.com/genre/.*?">(.*?)</a>'
+genre_vzorec = r'<a href="https://store.steampowered.com/genre/.*?">(.*?)</a>[,<]'
 achievements_vzorec = r'<div class="responsive_banner_link_title responsive_chevron_right">View Steam Achievements <span class="responsive_banner_link_total">\((\d*)\)</span></div>'
 description_vzorec = r'"og:description" content="(.*)">'
 
@@ -87,7 +92,6 @@ def get_game_info(html):
         achievements_vzorec, html, 1, "No achievements"
     )
     nova_igra.description = find_information(description_vzorec, html, 1)
-    nova_igra.description.replace(";", ":,")
     return nova_igra
 
 
