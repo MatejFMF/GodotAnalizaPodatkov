@@ -26,69 +26,68 @@ class Igra:
         pass
 
     def __str__(self) -> str:
-        return str((self.ime, "id: " + self.id))
+        return f"Id: {self.id}, {self.ime}"
+
+
+def find_information(vzorec, html, group_number, not_found_message="None"):
+    try:
+        return re.search(vzorec, html).group(group_number)
+    except:
+        return not_found_message
+
+
+def find_multiple_information(vzorec, html, group_numbers, not_found_message="None"):
+    try:
+        return re.search(vzorec, html).group(*group_numbers)
+    except:
+        return not_found_message
+
+
+def find_all_information(vzorec, html, not_found_message="None"):
+    try:
+        return str(tuple(x for x in re.findall(vzorec, html)))
+    except:
+        return not_found_message
+
+
+# VZORCI
+ime_vzorec = r'<div id="appHubAppName" class="apphub_AppName">(.*)</div>'
+id_link_vzorec = r'"og:url" content="(https://store.steampowered.com/app/(\d+).*)/">'
+cena_vzorec1 = r'<div class="discount_block game_purchase_discount.*?data-bundlediscount="0".*?aria-label="(\d*%) off. (.*?) normally, discounted to (.*?)">'
+cena_vzorec2 = r'<div class="game_purchase_price price" data-price-final="\d*">\n*?\s*(.*?)\s*</div>'
+developer_vzorec = r'<div class="summary column" id="developers_list">\n?\s*<a href="https://store.steampowered.com/.*">(.*)</a>'
+publisher_vzorec = r'<div class="subtitle column">Publisher:</div>\n?\s*<div class="summary column">\n?\s*<a href="https://store.steampowered.com/.*">(.*)</a>'
+release_date_vzorec = r"<b>Release Date:</b> (.*)<br>"
+all_reviews_vzorec = r'<div class="subtitle column all">All Reviews:</div>\n?\s*<div class="summary column">\n?\s*<span class=.*>(.*)</span>\n?\s*<span class="responsive_hidden">\n?\s*\((.*)\)\n?\s*</span>\n?\s*<span class="nonresponsive_hidden responsive_reviewdesc">\n?\s*- (\d+%)'
+recent_reviews_vzorec = r'<div class="subtitle column">Recent Reviews:</div>\n?\s*<div class="summary column">\n?\s*<span class=.*>(.*)</span>\n?\s*<span class="responsive_hidden">\n?\s*\((.+)\)\n?\s*</span>\n?\s*<span class="nonresponsive_hidden responsive_reviewdesc">\n\s*- (\d+%)'
+genre_vzorec = r'<a href="https://store.steampowered.com/genre/.*?">(.*?)</a>'
+achievements_vzorec = r'<div class="responsive_banner_link_title responsive_chevron_right">View Steam Achievements <span class="responsive_banner_link_total">\((\d*)\)</span></div>'
+description_vzorec = r'"og:description" content="(.*)">'
 
 
 def get_game_info(html):
     nova_igra = Igra()
-    ime_vzorec = r'<div id="appHubAppName" class="apphub_AppName">(.*)</div>'
-    try:
-        nova_igra.ime = re.search(ime_vzorec, html).group(1)
-    except:
-        nova_igra.ime = "None"
-    id_link_vzorec = (
-        r'"og:url" content="(https://store.steampowered.com/app/(\d+).*)/">'
+    nova_igra.ime = find_information(ime_vzorec, html, 1)
+    nova_igra.link = find_information(id_link_vzorec, html, 1)
+    nova_igra.id = find_information(id_link_vzorec, html, 2)
+    nova_igra.cena = find_information(cena_vzorec1, html, 2, "not_found")
+    if nova_igra.cena == "not_found":
+        nova_igra.cena = find_information(cena_vzorec2, html, 1, "Free")
+    nova_igra.discount = find_multiple_information(
+        cena_vzorec1, html, (1, 3), "No discount"
     )
-    try:
-        nova_igra.link = re.search(id_link_vzorec, html).group(1)
-    except:
-        nova_igra.link = "None"
-    try:
-        nova_igra.id = re.search(id_link_vzorec, html).group(2)
-    except:
-        nova_igra.id = "None"
-    developer_vzorec = r'<div class="summary column" id="developers_list">\n?\s*<a href="https://store.steampowered.com/.*">(.*)</a>'
-    try:
-        nova_igra.developer = re.search(developer_vzorec, html).group(1)
-    except:
-        nova_igra.vzorec = "None"
-    publisher_vzorec = r'<div class="subtitle column">Publisher:</div>\n?\s*<div class="summary column">\n?\s*<a href="https://store.steampowered.com/.*">(.*)</a>'
-    try:
-        nova_igra.publisher = re.search(publisher_vzorec, html).group(1)
-    except:
-        nova_igra.publisher = "None"
-    release_date_vzorec = r"<b>Release Date:</b> (.*)<br>"
-    try:
-        nova_igra.release_date = re.search(release_date_vzorec, html).group(1)
-    except:
-        nova_igra.vzorec = "None"
-    recent_reviews_vzorec = r'<div class="subtitle column">Recent Reviews:</div>\n?\s*<div class="summary column">\n?\s*<span class=.*>(.*)</span>\n?\s*<span class="responsive_hidden">\n?\s*\((.+)\)\n?\s*</span>\n?\s*<span class="nonresponsive_hidden responsive_reviewdesc">\n\s*- (\d+%)'
-    try:
-        nova_igra.recent_reviews = str(
-            re.search(recent_reviews_vzorec, html).group(1, 2, 3)
-        )
-    except:
-        nova_igra.recent_reviews = "None"
-    all_reviews_vzorec = r'<div class="subtitle column all">All Reviews:</div>\n?\s*<div class="summary column">\n?\s*<span class=.*>(.*)</span>\n?\s*<span class="responsive_hidden">\n?\s*\((.*)\)\n?\s*</span>\n?\s*<span class="nonresponsive_hidden responsive_reviewdesc">\n?\s*- (\d+%)'
-    try:
-        nova_igra.all_reviews = str(re.search(all_reviews_vzorec, html).group(1, 2, 3))
-    except:
-        nova_igra.all_reviews = "None"
-    genre_vzorec = r'<a href="https://store.steampowered.com/genre/.*?">(.*?)</a>'
-    try:
-        nova_igra.genre = str(tuple(x for x in re.findall(genre_vzorec, html)))
-    except:
-        nova_igra.genre = "None"
-    achievements_vzorec = r'<div class="responsive_banner_link_title responsive_chevron_right">View Steam Achievements <span class="responsive_banner_link_total">\((\d*)\)</span></div>'
-    try:
-        nova_igra.achievements = re.search(achievements_vzorec, html).group(1)
-    except:
-        nova_igra.achievements = "0"
-    description_vzorec = r'"og:description" content="(.*)">'
-    try:
-        nova_igra.description = re.search(description_vzorec, html).group(1)
-    except:
-        nova_igra.description = "None"
+    nova_igra.developer = find_information(developer_vzorec, html, 1)
+    nova_igra.publisher = find_information(publisher_vzorec, html, 1)
+    nova_igra.release_date = find_information(release_date_vzorec, html, 1)
+    nova_igra.all_reviews = find_multiple_information(
+        all_reviews_vzorec, html, (1, 2, 3), "No reviews"
+    )
+    nova_igra.genre = find_all_information(genre_vzorec, html)
+    nova_igra.achievements = find_information(
+        achievements_vzorec, html, 1, "No achievements"
+    )
+    nova_igra.description = find_information(description_vzorec, html, 1)
+    nova_igra.description.replace(";", ":,")
     return nova_igra
 
 
@@ -97,4 +96,4 @@ def id_to_link(id):
 
 
 def game_info_to_string(igra: Igra):
-    return f"{igra.id};{igra.ime};{igra.link};{igra.release_date};{igra.developer};{igra.publisher};{igra.recent_reviews};{igra.all_reviews};{igra.genre};{igra.achievements};{igra.description}"
+    return f"{igra.id};{igra.ime};{igra.link};{igra.cena};{igra.discount};{igra.release_date};{igra.developer};{igra.publisher};{igra.all_reviews};{igra.genre};{igra.achievements};{igra.description};"
