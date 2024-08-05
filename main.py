@@ -11,7 +11,7 @@ godot_seznam = funkcije.findall_godot_games_ids(godot_html)
 # cca. 25 minut
 with open("godot.csv", "w", encoding="utf8") as file:
     file.write(
-        "id;ime;link;cena;discount;release_date;developer;publisher;all_reviews;genre;achievements;description"
+        "id;ime;link;app_type;cena;discount;release_date;developer;publisher;all_reviews;genre;achievements;description"
         + "\n"
     )
     stevilo_iger = len(godot_seznam)

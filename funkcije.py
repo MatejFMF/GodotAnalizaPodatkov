@@ -63,6 +63,10 @@ cena_vzorec2 = r'<div class="game_purchase_price price" data-price-final="\d*">\
 developer_vzorec = r'<div class="summary column" id="developers_list">\n?\s*<a href="https://store.steampowered.com/.*">(.*)</a>'
 publisher_vzorec = r'<div class="subtitle column">Publisher:</div>\n?\s*<div class="summary column">\n?\s*<a href="https://store.steampowered.com/.*">(.*)</a>'
 release_date_vzorec = r"<b>Release Date:</b> (.*)<br>"
+app_type_vzorec = r'<a href="https://store.steampowered.com/search/.*?">All (.*?)s?</a>'
+dlc_vzorec = (
+    r'<a href="https://store.steampowered.com/dlc/.*?">(Downloadable Content)</a>'
+)
 all_reviews_vzorec = r'<div class="subtitle column all">All Reviews:</div>\n?\s*<div class="summary column">\n?\s*<span class=.*>(.*)</span>\n?\s*<span class="responsive_hidden">\n?\s*\((.*)\)\n?\s*</span>\n?\s*<span class="nonresponsive_hidden responsive_reviewdesc">\n?\s*- (\d+%)'
 recent_reviews_vzorec = r'<div class="subtitle column">Recent Reviews:</div>\n?\s*<div class="summary column">\n?\s*<span class=.*>(.*)</span>\n?\s*<span class="responsive_hidden">\n?\s*\((.+)\)\n?\s*</span>\n?\s*<span class="nonresponsive_hidden responsive_reviewdesc">\n\s*- (\d+%)'
 genre_vzorec = r'<a href="https://store.steampowered.com/genre/.*?">(.*?)</a>[,<]'
@@ -84,6 +88,12 @@ def get_game_info(html):
     nova_igra.developer = find_information(developer_vzorec, html, 1)
     nova_igra.publisher = find_information(publisher_vzorec, html, 1)
     nova_igra.release_date = find_information(release_date_vzorec, html, 1)
+
+    nova_igra.app_type = find_information(app_type_vzorec, html, 1)
+    if nova_igra.app_type == "Game":
+        nova_igra.app_type = find_information(dlc_vzorec, html, 1, "Game")
+    if nova_igra.app_type == "Game":
+        nova_igra.app_type = find_information(r"(Demo)$", nova_igra.ime, 1, "Game")
     nova_igra.all_reviews = find_multiple_information(
         all_reviews_vzorec, html, (1, 2, 3), "No reviews"
     )
@@ -100,4 +110,4 @@ def id_to_link(id):
 
 
 def game_info_to_string(igra: Igra):
-    return f"{igra.id};{igra.ime};{igra.link};{igra.cena};{igra.discount};{igra.release_date};{igra.developer};{igra.publisher};{igra.all_reviews};{igra.genre};{igra.achievements};{igra.description}"
+    return f"{igra.id};{igra.ime};{igra.link};{igra.app_type};{igra.cena};{igra.discount};{igra.release_date};{igra.developer};{igra.publisher};{igra.all_reviews};{igra.genre};{igra.achievements};{igra.description}"

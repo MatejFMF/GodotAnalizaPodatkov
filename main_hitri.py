@@ -12,7 +12,7 @@ urls = [funkcije.id_to_link(id) for id in godot_seznam]
 
 # S tema spremenljivkama nadzoriraš, kako hitro pridobivaš podatke
 # Če je prehirto, lahko spletna stran zavrne
-request_time = 1
+request_time = 0.5
 no_of_requests = 10
 
 
@@ -27,7 +27,7 @@ async def fetch(session, url):
 async def main():
     with open("godot_hitro.csv", "w", encoding="utf8") as file:
         file.write(
-            "id;ime;link;cena;discount;release_date;developer;publisher;all_reviews;genre;achievements;description"
+            "id;ime;link;app_type;cena;discount;release_date;developer;publisher;all_reviews;genre;achievements;description"
             + "\n"
         )
         counter = 0
