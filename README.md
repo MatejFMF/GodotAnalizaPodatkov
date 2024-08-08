@@ -6,13 +6,13 @@ podatke posamičnih iger pa sem pridobil iz spletne strani https://store.steampo
 
 ### Navodila za uporabo:
 * Naložimo zip na računalnik in ga ekstrahiramo
-* Odpremo ekstrahirano datoteko (priporočeno s programom Visual Studio Code).
-* Za pridobitel podatkov zaženemo program main.py
+* Odpremo ekstrahiramo datoteko (priporočeno s programom Visual Studio Code).
+* Za pridobitev podatkov zaženemo program main.py
 * Za analizo podatkov odpremo datoteko analiza.ipynb
-* Če vam program pravi, da nimate potrebnih knižnjic jih morate naložiti z pip install
+* Če vam program pravi, da nimate potrebnih knižnjic, jih morate naložiti z pip install
 > Če se vam to zdi prezahtevno, si lahko samo pogledate datoteko analiza.ipynb
 
-### Uporabljene knižnijce:
+### Uporabljene knižnjice:
 * re
 * requests
 * aiohttp
