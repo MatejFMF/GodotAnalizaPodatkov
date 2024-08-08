@@ -5,6 +5,8 @@ Seznam iger sem pridobil iz spletne strani https://steamdb.info/tech/Engine/Godo
 podatke posamičnih iger pa sem pridobil iz spletne strani https://store.steampowered.com/.
 
 ### Navodila za uporabo:
+* Naložimo zip na računalnik in ga ekstrahiramo
+* Odpremo ekstrahirano datoteko (priporočeno s programom Visual Studio Code).
 * Za pridobitel podatkov zaženemo program main.py
 * Za analizo podatkov odpremo datoteko analiza.ipynb
 * Če vam program pravi, da nimate potrebnih knižnjic jih morate naložiti z pip install
