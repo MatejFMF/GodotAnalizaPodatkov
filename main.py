@@ -14,7 +14,7 @@ urls = [funkcije.id_to_link(id) for id in godot_seznam]
 # Če je prehirto, lahko spletna stran zavrne
 # cca. 5 minut
 request_time = 1
-no_of_requests = 20
+no_of_requests = 100
 
 
 ###
