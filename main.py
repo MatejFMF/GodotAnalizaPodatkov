@@ -28,7 +28,7 @@ async def fetch(session, url):
 async def main():
     with open("godot.csv", "w", encoding="utf8") as file:
         file.write(
-            "id;ime;link;app_type;cena;discount;release_date;developer;publisher;all_reviews;genre;achievements;description"
+            "id;ime;link;tip_aplikacije;cena;znižanje;datum_izdaje;izdajatelj;založnik;ocene;žanri;št_dosežkov;opis"
             + "\n"
         )
         counter = 0

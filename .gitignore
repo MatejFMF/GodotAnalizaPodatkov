@@ -3,6 +3,7 @@
 test.py
 __pycache__
 *.csv
+!godot.csv
 steam.py
 test_notebook.ipynb
 greq_test.py
