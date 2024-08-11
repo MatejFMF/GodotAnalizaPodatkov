@@ -18,6 +18,10 @@ def naredi_godot_csv(datoteka, prva_vrstica, seznam):
             file.write(str(igra[0]) + "," + igra[1] + "\n")
 
 
+def split_tuple(list, step):
+    return tuple(list[i : i + step] for i in range(0, len(list), step))
+
+
 class Igra:
 
     def __init__(self) -> None:
