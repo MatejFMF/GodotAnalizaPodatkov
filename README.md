@@ -19,3 +19,7 @@ podatke posamičnih iger pa sem pridobil iz spletne strani https://store.steampo
 * asyncio
 * pandas
 * matplotlib.pyplot
+
+#### Glede programa steam.py
+steam.py je program, ki pregleda vse steam igre, vključen kot zanimiv dodatek.
+Več informacij v [commit komentarju](https://github.com/MatejFMF/GodotAnalizaPodatkov/commit/9c240871379458a8541e99dd5c370fcc6475391f).
